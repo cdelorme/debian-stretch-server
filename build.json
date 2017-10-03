@@ -1,0 +1,61 @@
+{
+	"variables": {
+		"root_password": null,
+		"username": "cdelorme",
+		"password": "realsecure",
+		"github_username": "cdelorme"
+	},
+	"builders": [
+		{
+			"headless": false,
+			"type": "virtualbox-iso",
+			"virtualbox_version_file": "",
+			"vm_name": "debian-stretch-server",
+			"output_directory": "dist",
+			"guest_additions_mode": "disable",
+			"guest_os_type": "Debian_64",
+			"iso_url": "http://cdimage.debian.org/debian-cd/9.1.0/amd64/iso-cd/debian-9.1.0-amd64-netinst.iso",
+			"iso_checksum": "c9e070074de83aa22e141f59a423e5210a5019b369ef1efe61a2afd44ba8f371",
+			"iso_checksum_type": "sha256",
+			"iso_interface": "sata",
+			"hard_drive_interface": "sata",
+			"disk_size": 65536,
+			"vboxmanage": [["modifyvm", "{{.Name}}", "--memory", "1024"]],
+			"http_directory": ".",
+			"boot_command": [
+				"<esc><wait>",
+				"install",
+				" auto",
+				" url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg",
+				" debian-installer=en_US",
+				" locale=en_US",
+				" keymap=us",
+				" passwd/root-password=\"{{user `root_password`}}\" passwd/root-password-again=\"{{user `root_password`}}\"",
+				" netcfg/get_hostname=stretch",
+				" netcfg/get_domain=vm",
+				" <enter>"
+			],
+			"ssh_port": 22,
+			"ssh_wait_timeout": "15m",
+			"ssh_username": "root",
+			"ssh_password": "{{user `root_password`}}",
+			"shutdown_command": "shutdown -h now"
+		}
+	],
+	"provisioners": [
+		{
+			"type": "file",
+			"source": ".",
+			"destination": "/tmp/debian-stretch-server"
+		},
+		{
+			"type": "shell",
+			"environment_vars": [
+				"username={{user `username`}}",
+				"password={{user `password`}}",
+				"github_username={{user `github_username`}}"
+			],
+			"script": "stretch.sh"
+		}
+	]
+}
