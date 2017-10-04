@@ -29,8 +29,10 @@ rm -f /etc/nginx/sites-enabled/default /etc/nginx/sites-available/default
 systemctl restart nginx
 
 # secure ssh by disabling root access and only accepting ssh keys going forward
-sed -i "s/^#\?PermitRootLogin.*[yn].*/PermitRootLogin no/" /etc/ssh/sshd_config
-sed -i "s/^#\?PasswordAuthentication\s*[yn].*/PasswordAuthentication no/" /etc/ssh/sshd_config
+sed -i "/^#\?PermitRootLogin.*[yn].*/d" /etc/ssh/sshd_config
+sed -i "/^#\?PasswordAuthentication.*[yn].*/d" /etc/ssh/sshd_config
+echo "PermitRootLogin no" >> /etc/ssh/sshd_config
+echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
 systemctl restart sshd
 
 # update command not found archive
@@ -48,7 +50,7 @@ sed -i 's/UMASK\s*022/UMASK\t\t002/' /etc/login.defs
 [ $(grep -c "umask=002" /etc/pam.d/common-session) -eq 0 ] && echo "session optional pam_umask.so umask=002" >> /etc/pam.d/common-session
 
 # disable capslock forever in favor of another ctrl and reload console configuration
-if [ $(grep "XKBOPTIONS" /etc/default/keyboard | grep -c "ctrl:nocaps") -eq 0 ]; then
+if [[ -f /etc/default/keyboard && $(grep "XKBOPTIONS" /etc/default/keyboard | grep -c "ctrl:nocaps") -eq 0 ]]; then
 	sed -i 's/XKBOPTIONS.*/XKBOPTIONS="ctrl:nocaps"/' /etc/default/keyboard
 	dpkg-reconfigure -phigh console-setup
 fi
