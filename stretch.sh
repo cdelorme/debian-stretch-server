@@ -9,7 +9,7 @@ while [[ -z "$username" && "$username" != "root" ]]; do read -p "please enter a 
 while ! id $username &> /dev/null && [ -z "$password" ]; do read -p "please enter a password for $username: " -s password; echo ""; done
 
 # ask for optional input
-[ -z "github_username" ] && read -p "please enter a github username to synchronize authorized keys: " github_username
+[ -z "$github_username" ] && read -p "please enter a github username to synchronize authorized keys: " github_username
 
 # show the user everything that transpires henceforth
 set -x
