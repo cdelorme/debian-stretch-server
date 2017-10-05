@@ -96,9 +96,8 @@ alias ..='cd ..'
 alias sshfs='sshfs -o cache=yes,compression=yes,large_read,kernel_cache'
 
 # load or synchronize default ssh keys using shared ssh agent socket file (eg. keychain equivalent)
-export SSH_AUTH_SOCK=~/.ssh/socket
-ssh-add -l &> /dev/null
-sshout=$?
+ssh-add -l &> /dev/null; sshout=$?
+[ $sshout -eq 0 ] || export SSH_AUTH_SOCK=~/.ssh/socket
 if [ $sshout -eq 2 ]; then
 	rm -f $SSH_AUTH_SOCK
 	eval $(ssh-agent -a $SSH_AUTH_SOCK 2> /dev/null) &> /dev/null
