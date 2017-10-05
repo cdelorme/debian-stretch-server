@@ -16,9 +16,9 @@ set -x
 
 # update packages and install base utilities
 export DEBIAN_FRONTEND=noninteractive
-apt-get clean
-apt-get update
-apt-get upgrade -y
+apt clean
+apt update
+apt upgrade -y
 while ! apt install -y ssh sudo vim ntp tmux git unzip curl wget rsync jq bash-completion command-not-found ca-certificates resolvconf nginx-full; do sleep 1; done
 
 # install source files and update then restart effected services
