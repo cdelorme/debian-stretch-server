@@ -68,8 +68,7 @@ rsync -Pav /etc/skel/ ~/
 
 # add crontab to update keys, update keys, and set git username
 [ -n "$github_username" ] && su $username -c "(crontab -l 2> /dev/null | grep -v 'update-keys'; echo '@hourly /usr/local/bin/update-keys $github_username') | crontab -"
-su $username -c "/usr/local/bin/update-keys $github_username"
-su $username -c "cd && git config --global user.name $github_username"
+[ -n "$github_username" ] && su $username -c "/usr/local/bin/update-keys $github_username"
 
 # setup /srv/www and /srv/git /w stickybit for group on the parent folders
 mkdir -p /srv/{www,git}
