@@ -60,11 +60,12 @@ if ! id $username &>/dev/null; then
 	useradd -m -s /bin/bash $username
 	echo "${username}:${password}" | chpasswd -c SHA512
 	usermod -aG sudo,users,disk,adm,netdev,plugdev,www-data $username
+else
+	[ $EUID -ne 0 ] && rsync -Pav /etc/skel/ $(getent passwd $username | cut -d: -f6)/
 fi
 
-# install dot-files for root and user
-rsync -Pav /etc/skel/ ~/
-[ $EUID -ne 0 ] && rsync -Pav /etc/skel/ $(getent passwd root | cut -d: -f6)/
+# install dot-files for root
+rsync -Pav /etc/skel/ $(getent passwd root | cut -d: -f6)/
 
 # add crontab to update keys, update keys, and set git username
 [ -n "$github_username" ] && su $username -c "(crontab -l 2> /dev/null | grep -v 'update-keys'; echo '@hourly /usr/local/bin/update-keys $github_username') | crontab -"
