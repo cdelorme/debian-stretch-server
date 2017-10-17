@@ -5,7 +5,7 @@ These days I tend to provision light weight servers in AWS and DigitalOcean.
 
 **I don't use ["configuration management software"](notes/configuration-management-software.md).**
 
-To help alleviate testing of images I use [`packer`](https://www.packer.io/) to [build a base image](build.json) using [`virtualbox`](https://www.virtualbox.org/wiki/Downloads).  _In the future I may also add builders for aws and digital ocean._  Currently the only required variable is `-var "root_password="`, which is used by the preseed of debian from an iso.
+To help alleviate testing of images I use [`packer`](https://www.packer.io/) to [build a base image](build.json) using [`virtualbox`](https://www.virtualbox.org/wiki/Downloads).  _In the future I may also add builders for aws and digital ocean._  Currently the only required variable is `-var "root_password="`, which is used by the preseed of debian from an iso.  _When running packer be sure to set `PACKER_CACHE_DIR` to someplace outside the root folder or it will upload the iso with the repository onto the image._
 
 If you are provisioning a machine using a debian stretch image you can also use my [automation script](stretch.sh) as "user-data", or run it with `sudo` on an already provisioned machine.
 
@@ -32,3 +32,10 @@ I won't cover installation of databases (eg. mysql, postgresql, mongodb, etc...)
 _Also if you are running raw hardware, you may want to invest some effort into `lm-sensors` and `watchdog` packages to deal with hardware failure._
 
 For further documentation, refer to my [notes](notes/).
+
+
+## usage
+
+Here is how to run packer:
+
+	PACKER_CACHE_DIR=/tmp/packer_cache packer build -var "root_password=securepassword" build.json
