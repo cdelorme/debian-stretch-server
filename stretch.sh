@@ -25,7 +25,7 @@ while ! apt install -y ssh sudo vim ntp tmux git unzip curl wget rsync jq bash-c
 [ -d /tmp/debian-stretch-server/install ] || git clone https://github.com/cdelorme/debian-stretch-server /tmp/debian-stretch-server
 rsync -Pav /tmp/debian-stretch-server/install/ /
 rm -f /etc/nginx/sites-enabled/default /etc/nginx/sites-available/default
-/etc/network/if-pre-up.d/iptables
+/etc/network/if-up.d/iptables
 systemctl restart nginx
 
 # secure ssh by disabling root access and only accepting ssh keys going forward
