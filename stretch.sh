@@ -19,7 +19,7 @@ export DEBIAN_FRONTEND=noninteractive
 apt clean
 apt update
 apt upgrade -y
-while ! apt install -y ssh sudo vim ntp tmux git unzip curl wget rsync jq bash-completion rsync command-not-found ca-certificates resolvconf nginx-full; do sleep 1; done
+while ! apt install -y ssh sudo vim ntp tmux git unzip curl wget rsync jq bash-completion command-not-found ca-certificates resolvconf nginx-full; do sleep 1; done
 
 # install source files and update then restart effected services
 [ -d /tmp/debian-stretch-server/install ] || git clone https://github.com/cdelorme/debian-stretch-server /tmp/debian-stretch-server
