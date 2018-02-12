@@ -12,11 +12,11 @@ set ttyfast lazyredraw vb
 set wildmenu wildmode=list:longest
 set foldmethod=syntax foldlevelstart=20
 set nobackup noswapfile
-:silent! set undodir=$HOME/.vim/undo undolevels=1000 undoreload=10000 undofile
+silent! set undodir=$HOME/.vim/undo undolevels=1000 undoreload=10000 undofile
 
 " set color scheme
 set background=dark
-:silent! colorscheme vividchalk
+silent! colorscheme vividchalk
 
 " set leader-key to comma
 let mapleader=","
@@ -39,13 +39,16 @@ set pastetoggle=<leader>p
 nmap <silent> <leader>ev :e $MYVIMRC<cr>
 nmap <silent> <leader>sv :so $MYVIMRC<cr>
 
+" shortcut to force permissions
+cmap w!! w !sudo tee > /dev/null %
+
 " disable noise makers
 set noeb vb t_vb=
 
 " auto syntax highlighting and fold-settings
-:filetype on
-:syntax on
-:filetype indent on
+filetype on
+syntax on
+filetype indent on
 filetype plugin on
 set foldmethod=syntax
 
@@ -79,10 +82,9 @@ function! Tab_Or_Complete()
 		return "\<tab>"
 	endif
 endfunction
-:inoremap <tab> <c-r>=Tab_Or_Complete()<cr>
-:set dictionary="/usr/share/dict/words"
+inoremap <tab> <c-r>=Tab_Or_Complete()<cr>
+set dictionary="/usr/share/dict/words"
 
 " load plugins
-:silent! set runtimepath^=$HOME/.vim/bundle/ctrlp.vim
-:silent! :helptags $HOME/.vim/doc
-
+silent! set runtimepath^=$HOME/.vim/bundle/ctrlp.vim
+silent! :helptags $HOME/.vim/doc

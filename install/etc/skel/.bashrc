@@ -7,6 +7,24 @@ export HISTCONTROL=ignoreboth:erasedups
 shopt -s histappend
 shopt -s checkwinsize
 
+# set aliases with color and performance optimizations
+alias ls='ls -vhFA --color=auto'
+alias grep='grep --color=auto'
+alias ..='cd ..'
+alias sshfs='sshfs -o cache=yes,compression=yes,large_read,kernel_cache'
+
+# pretty man pages
+man() {
+	env \
+		LESS_TERMCAP_md=$'\e[1;36m' \
+		LESS_TERMCAP_me=$'\e[0m' \
+		LESS_TERMCAP_se=$'\e[0m' \
+		LESS_TERMCAP_so=$'\e[1;40;92m' \
+		LESS_TERMCAP_ue=$'\e[0m' \
+		LESS_TERMCAP_us=$'\e[1;32m' \
+			man "$@"
+}
+
 # colors for enhanced prompt
 c_bold="\033[1m"
 c_red="\033[31m"
@@ -20,7 +38,6 @@ c_sgr0="\033[0m"
 promptify() {
 	local prompt_string
 	prompt_string="${c_blue}${0} ($(date +'%R:%S.%3N')::${timer_show}s) ${c_purple}$(whoami)${c_sgr0}@${c_green}$(hostname) ${c_bold}${c_blue}$(dirs)${c_sgr0}"
-
 	if git rev-parse --git-dir &> /dev/null; then
 		git_branch=$(git branch 2> /dev/null | sed -n 's/^\*[ ]*//p')
 		git_stats=$(git status --porcelain --untracked-files=all 2> /dev/null)
@@ -73,35 +90,17 @@ fi
 # enable bash complation
 . /etc/bash_completion
 
-# pretty man pages
-man() {
-	env \
-		LESS_TERMCAP_md=$'\e[1;36m' \
-		LESS_TERMCAP_me=$'\e[0m' \
-		LESS_TERMCAP_se=$'\e[0m' \
-		LESS_TERMCAP_so=$'\e[1;40;92m' \
-		LESS_TERMCAP_ue=$'\e[0m' \
-		LESS_TERMCAP_us=$'\e[1;32m' \
-			man "$@"
-}
-
 # explicitly set XDG DATA DIRS
 [ -z "$XDG_DATA_DIRS" ] && export XDG_DATA_DIRS="/usr/share:/usr/local/share"
 export XDG_DATA_DIRS="$XDG_DATA_DIRS:$HOME/.local/share"
 
-# set aliases with color and performance optimizations
-alias ls='ls -vhFA --color=auto'
-alias grep='grep --color=auto'
-alias ..='cd ..'
-alias sshfs='sshfs -o cache=yes,compression=yes,large_read,kernel_cache'
-
 # load or synchronize default ssh keys using shared ssh agent socket file (eg. keychain equivalent)
 ssh-add -l &> /dev/null; sshout=$?
-[ $sshout -eq 0 ] || export SSH_AUTH_SOCK=~/.ssh/socket
 if [ $sshout -eq 2 ]; then
-	rm -f $SSH_AUTH_SOCK
-	eval $(ssh-agent -a $SSH_AUTH_SOCK 2> /dev/null) &> /dev/null
-	ssh-add 2> /dev/null
-elif [ $sshout -eq 1 ]; then
-	ssh-add 2> /dev/null
+	export SSH_AUTH_SOCK=~/.ssh/socket
+	if ! ssh-add -l &> /dev/null; then
+		rm -f $SSH_AUTH_SOCK
+		eval $(ssh-agent -a $SSH_AUTH_SOCK 2> /dev/null) &> /dev/null
+	fi
 fi
+ssh-add 2> /dev/null
