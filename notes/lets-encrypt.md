@@ -32,15 +32,15 @@ _This client is already installed with default configuration and ready to be ini
 
 ### automation
 
-Start by initializing dehydrated:
-
-	dehydrated --register --accept-terms
-
-Populate `/srv/ssl/domains.txt` with a line per certificate issued; multiple domain names can exist per line.
+**When testing scripts set `CA="https://acme-staging-v02.api.letsencrypt.org/directory"` to avoid hitting rate limits before you are ready to use the final results.**
 
 Assuming you are using `DNS-01` verification, you will want to register an API key and write commands in `/etc/dehydrated/hooks.sh` to create the record.  _This file must be executable and readable by the user dehydrated is configured to run as._
 
-**When testing scripts set `CA="https://acme-staging-v02.api.letsencrypt.org/directory"` to avoid hitting rate limits before you are ready to use the final results.**
+Start by initializing dehydrated:
+
+	dehydrated --register --accept-terms -k /etc/dehydrated/hooks.sh
+
+Populate `/srv/ssl/domains.txt` with a line per certificate issued; multiple domain names can exist per line.
 
 Run the first-time creation:
 
