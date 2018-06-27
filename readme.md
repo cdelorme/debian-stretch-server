@@ -22,6 +22,7 @@ I choose not to install any interpreters or build tools.  The primary reason is 
 
 I have documented the installation process for many additional tools, _although some may be outdated_:
 
+- [lets-encrypt](notes/lets-encrypt.md)
 - [`msmtp-mta` (_an alternative to `exim4`_)](notes/msmtp-mta.md)
 - [go with `gvm`](notes/gvm.md)
 - [node with `nvm`](notes/nvm.md)
