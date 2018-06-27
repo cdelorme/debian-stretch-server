@@ -55,6 +55,10 @@ if [[ -f /etc/default/keyboard && $(grep "XKBOPTIONS" /etc/default/keyboard | gr
 	dpkg-reconfigure -phigh console-setup
 fi
 
+# download/install dehydrated acme client
+curl -Lso /usr/local/bin/dehydrated https://raw.githubusercontent.com/lukas2511/dehydrated/master/dehydrated
+chmod +x /usr/local/bin/dehydrated
+
 # create and configure username
 if ! id $username &>/dev/null; then
 	useradd -m -s /bin/bash $username
@@ -73,5 +77,6 @@ rsync -Pav /etc/skel/ $(getent passwd root | cut -d: -f6)/
 
 # setup /srv/www and /srv/git /w stickybit for group on the parent folders
 mkdir -p /srv/{www,git}
-chown ${username}:www-data /srv/{www,git}
-chmod 2750 /srv/{www,git}
+mkdir -p /srv/ssl/{certs,accounts,chains,dehydrated}
+chown ${username}:www-data /srv/{www,git,ssl}
+chmod 2750 /srv/{www,git,ssl}
