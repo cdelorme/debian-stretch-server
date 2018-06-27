@@ -1,0 +1,6 @@
+DEHYDRATED_USER=root
+DEHYDRATED_GROUP=www-data
+CHALLENGETYPE=dns-01
+KEY_ALGO=prime256v1
+BASEDIR=/srv/ssl
+WELLKNOWN=/srv/ssl/dehydrated
